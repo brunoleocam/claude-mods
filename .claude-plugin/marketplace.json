@@ -1,0 +1,11 @@
+{
+  "name": "claude-mods",
+  "owner": { "name": "Bruno Campos" },
+  "plugins": [
+    {
+      "name": "model-router",
+      "source": "./plugins/model-router",
+      "description": "Analisa cada prompt antes de enviar, sugere o modelo e o esforço certos e registra a estimativa contra o gasto real."
+    }
+  ]
+}

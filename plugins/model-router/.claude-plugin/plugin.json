@@ -1,0 +1,21 @@
+{
+  "name": "model-router",
+  "version": "0.2.0",
+  "description": "Analisa cada prompt antes de enviar, sugere modelo e esforço (refinando o prompt para um novo chat quando compensa) e registra estimativa x gasto real",
+  "author": {
+    "name": "Bruno Campos",
+    "url": "https://github.com/brunoleocam"
+  },
+  "homepage": "https://github.com/brunoleocam/claude-mods",
+  "repository": "https://github.com/brunoleocam/claude-mods",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "mod",
+    "model",
+    "effort",
+    "cost",
+    "routing"
+  ],
+  "types": "./types/index.d.ts"
+}
