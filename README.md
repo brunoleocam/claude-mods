@@ -1,49 +1,49 @@
 # claude-mods
 
-Mods para o Claude Code. Hoje: **model-router**.
+Mods for Claude Code. Currently: **model-router**.
 
 ## model-router
 
-Analisa cada prompt no momento do envio e diz se o modelo e o esforço selecionados são os certos para ele. Se outro modelo rende mais, interrompe o envio, reescreve o prompt com um resumo da conversa, copia o resultado para a área de transferência e pede que você abra um novo chat com o modelo indicado. Também registra, para cada prompt, quantos tokens e quanto tempo o mod estimou e quanto o prompt realmente gastou, para você ver se as estimativas se sustentam.
+Analyzes each prompt when you send it and tells you whether the selected model and effort are the right ones for it. If another model would do better, it interrupts the send, rewrites the prompt with a summary of the conversation, copies the result to your clipboard and asks you to open a new chat with the suggested model. It also logs, for every prompt, how many tokens and how much time the mod estimated against what the prompt actually used, so you can check whether the estimates hold up.
 
-### Instalação
+### Install
 
-No terminal:
+In a terminal:
 
 ```
 /plugin install model-router --marketplace brunoleocam/claude-mods
 ```
 
-No app desktop, onde `/plugin` não roda: clique em **+** ao lado da caixa de prompt, depois em **Plugins**, **Add marketplace** com `brunoleocam/claude-mods` e **Add plugin**.
+In the desktop app, where `/plugin` does not run: click **+** next to the prompt box, then **Plugins**, **Add marketplace** with `brunoleocam/claude-mods`, then **Add plugin**.
 
-### Como funciona
+### How it works
 
-1. Você envia um prompt de 40 caracteres ou mais. O mod o segura e pede uma análise ao modelo atual, sobre a conversa (com o cache compartilhado). Sem conversa ainda, usa o Opus em medium.
-2. A análise segue a tabela do guia de escolha de modelos da Anthropic: Opus 5.5 em medium como padrão, Sonnet para código bem delimitado, Haiku para classificação e extração, Fable para refatorações, migrações e arquitetura.
-3. Se o modelo atual serve, o prompt segue. Se outro rende mais e a confiança é de pelo menos 75%, o mod interrompe, copia o prompt refinado e mostra três botões acima do prompt: **Enviar aqui mesmo**, **Copiar de novo** e **Descartar**.
-4. Depois de cada resposta, uma linha colorida mostra o gasto real ao lado da estimativa, por exemplo `⏱ 54s est 20s–70s ✓ · ↗ out 3.1k est 2k–6k ✓`.
+1. You send a prompt of 40 characters or more. The mod holds it and asks the current model to analyze it over the conversation (sharing the prompt cache). With no conversation yet, it uses Opus at medium effort.
+2. The analysis follows the model-selection guide from Anthropic: Opus 5.5 at medium as the default, Sonnet for well-scoped code, Haiku for classification and extraction, Fable for large refactors, migrations and architecture.
+3. If the current model fits, the prompt goes through. If another one would do better and the confidence is at least 75%, the mod interrupts, copies the refined prompt and shows three buttons above the prompt: **Send here anyway**, **Copy again** and **Discard**.
+4. After each reply, a colored line shows the real usage next to the estimate, for example `⏱ 54s est 20s–70s ✓ · ↗ out 3.1k est 2k–6k ✓`.
 
-A faixa acima do prompt também mostra o contexto usado e o tempo restante do cache (`Cache · XXm`).
+The band above the prompt also shows the context used and the time left on the cache (`Cache · XXm`).
 
-### Comandos
+### Commands
 
-| Comando | O que faz |
+| Command | What it does |
 | --- | --- |
-| `/router log` | Precisão das estimativas (dentro, acima e abaixo da faixa), custo médio da análise e quantas sugestões foram seguidas |
-| `/router send` | Envia o prompt retido neste chat mesmo assim |
-| `/router on` / `/router off` | Liga e desliga a análise |
-| `/router export` | Grava o log em `~/.claude/model-router-log.json` |
-| `/router reset` | Apaga o log |
+| `/router log` | Estimate accuracy (within, above and below the range), average analysis cost, and how many suggestions were followed |
+| `/router send` | Sends the held prompt in this chat anyway |
+| `/router on` / `/router off` | Turns the analysis on and off |
+| `/router export` | Writes the log to `~/.claude/model-router-log.json` |
+| `/router reset` | Clears the log |
 
-### O que você precisa saber
+### Good to know
 
-- **Cada prompt analisado tem um custo.** A análise é uma chamada ao modelo, que acrescenta alguns segundos ao envio e consome um pouco da sua janela de uso. `/router log` mostra a média real.
-- **O log guarda texto da sua conversa.** Quando o mod interrompe um prompt, o log inclui o resumo da conversa e o prompt refinado. Fica no armazenamento do mod e em `~/.claude/model-router-log.json`; não sai do seu computador, mas apague com `/router reset` antes de compartilhar o arquivo.
-- **O prazo do cache é uma suposição.** O Claude Code não informa quanto o cache dura; o mod assume 60 minutos desde a última resposta. Se o seu for de 5 minutos, mude `CACHE_TTL_MS` em `plugins/model-router/hooks/register.tsx`.
-- **O mod não abre um novo chat.** Ele copia o prompt refinado; abrir o chat e escolher o modelo é com você.
-- **As sugestões são de um modelo, não uma regra exata.** Use o log para decidir se confia nelas.
-- **Para trocar a confiança mínima** (75%), edite `MIN_CONFIDENCE` em `plugins/model-router/hooks/analyze.ts`.
+- **Every analyzed prompt has a cost.** The analysis is a model call: it adds a few seconds to each send and uses a little of your usage window. `/router log` shows the real average.
+- **The log keeps text from your conversation.** When the mod interrupts a prompt, the log includes the conversation summary and the refined prompt. It lives in the mod's storage and in `~/.claude/model-router-log.json`; it never leaves your computer, but clear it with `/router reset` before sharing the file.
+- **The cache lifetime is an assumption.** Claude Code does not report how long the cache lasts; the mod assumes 60 minutes after the last reply. If yours is 5 minutes, change `CACHE_TTL_MS` in `plugins/model-router/hooks/register.tsx`.
+- **The mod does not open a new chat.** It copies the refined prompt; opening the chat and picking the model is up to you.
+- **Suggestions come from a model, not an exact rule.** Use the log to decide how far to trust them.
+- **To change the minimum confidence** (75%), edit `MIN_CONFIDENCE` in `plugins/model-router/hooks/analyze.ts`.
 
-### Licença
+### License
 
 MIT.
